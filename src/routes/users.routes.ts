@@ -1,6 +1,5 @@
 import { Router } from 'express'
 
-import CreaeUserService from '../services/CreateUserService'
 import CreateUserService from '../services/CreateUserService'
 
 const usersRouter = Router()
@@ -16,6 +15,8 @@ usersRouter.post('/', async (request, response) => {
       email,
       password,
     })
+
+    delete user.password
 
     return response.json(user)
   } catch (err) {
