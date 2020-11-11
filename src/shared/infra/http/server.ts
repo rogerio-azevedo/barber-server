@@ -1,14 +1,14 @@
 import 'reflect-metadata'
 
 import express, { Request, Response, NextFunction } from 'express'
-import cors from 'cors'
 import 'express-async-errors'
+import cors from 'cors'
 
 import routes from './routes'
-import uploadConfig from './config/upload'
+import uploadConfig from '@config/upload'
 
-import './database/index'
-import AppError from './errors/AppError'
+import '@shared/infra/typeorm'
+import AppError from '@shared/errors/AppError'
 const app = express()
 app.use(cors())
 app.use(express.json())
