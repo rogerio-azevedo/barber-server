@@ -1,6 +1,6 @@
 // import 'reflect-metadata';
 
-// import AppError from '@shared/errors/AppError';
+import AppError from '@shared/errors/AppError'
 
 // import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 // import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
@@ -27,6 +27,27 @@ describe('CreateAppointment', () => {
     expect(appointment).toHaveProperty('id')
     expect(appointment.provider_id).toBe('123123123')
   })
+
+  it('should not be able to create two appointments on the same time', async () => {
+    const fakeAppointmentsRepository = new FakeAppointmentsRepository()
+    const createAppointment = new CreateAppointmentService(
+      fakeAppointmentsRepository,
+    )
+
+    const appointmentDate = new Date(2020, 4, 10, 12)
+
+    await createAppointment.excute({
+      date: appointmentDate,
+      provider_id: '123123123',
+    })
+
+    expect(
+      createAppointment.excute({
+        date: appointmentDate,
+        provider_id: '123123123',
+      }),
+    ).rejects.toBeInstanceOf(AppError)
+  })
   // beforeEach(() => {
   //   fakeAppointmentsRepository = new FakeAppointmentsRepository();
   //   fakeNotificationsRepository = new FakeNotificationsRepository();
@@ -38,21 +59,6 @@ describe('CreateAppointment', () => {
   //     fakeCacheProvider,
   //   );
 })
-
-//   it('should be able to create a new appointment', async () => {
-//     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
-//       return new Date(2020, 4, 10, 12).getTime();
-//     });
-
-//     const appointment = await createAppointment.execute({
-//       date: new Date(2020, 4, 10, 13),
-//       user_id: 'user-id',
-//       provider_id: 'provider-id',
-//     });
-
-//     expect(appointment).toHaveProperty('id');
-//     expect(appointment.provider_id).toBe('provider-id');
-//   });
 
 //   it('should not be able to create two appointments on the same time', async () => {
 //     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
